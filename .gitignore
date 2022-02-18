@@ -1,0 +1,9 @@
+# Binaries
+**/bin/
+bin-int/
+
+# Log Files
+*.log
+
+# Visual Studio files and hidden folder
+.vs/
