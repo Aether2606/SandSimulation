@@ -68,7 +68,7 @@ namespace Fidelia
 
 		inline size_t PositionToIndex(vec2 pos)
 		{
-			return pos.y * m_Height + pos.x;
+			return static_cast<size_t>(pos.y * m_Height + pos.x);
 		}
 
 		inline size_t PositionToIndex(u32 x, u32 y) 
@@ -90,8 +90,9 @@ namespace Fidelia
 	private:
 		const u32 m_BrushSize = 20;
 		const u32 m_Gravity = 5;
-		const u32 m_FireSpreadChance = 10;
-		const u32 m_AcidCorrodeChance = 1;
+		const s32 m_FireSpreadChance = 10;
+		const s32 m_AcidCorrodeChance = 1;
+
 		std::array<vec2, 8> m_NeighborPositions;
 		std::vector<vec2> m_ToNotify;
 

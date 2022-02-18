@@ -20,9 +20,9 @@ namespace Fidelia
 
 		m_Particles = new Particle[m_MaxParticleCount];
 
-		for (size_t y = 0; y < m_Height; ++y)
+		for (u32 y = 0; y < m_Height; ++y)
 		{
-			for (size_t x = 0; x < m_Width; ++x)
+			for (u32 x = 0; x < m_Width; ++x)
 			{
 				auto pos = PositionToIndex(x, y);
 				m_Particles[pos] = m_ParticleList.air;
@@ -86,9 +86,9 @@ namespace Fidelia
 		}
 		else if (Keyboard::IsKeyPressed(Key::C))
 		{
-			for (size_t y = 0; y < m_Height; ++y)
+			for (u32 y = 0; y < m_Height; ++y)
 			{
-				for (size_t x = 0; x < m_Width; ++x)
+				for (u32 x = 0; x < m_Width; ++x)
 				{
 					auto pos = PositionToIndex(x, y);
 					m_Particles[pos] = m_ParticleList.air;
@@ -102,14 +102,14 @@ namespace Fidelia
 
 			if (InBounds(mouseX, mouseY))
 			{				
-				for (size_t y = 0; y < m_Height; ++y)
+				for (u32 y = 0; y < m_Height; ++y)
 				{
-					for (size_t x = 0; x < m_Width; ++x)
+					for (u32 x = 0; x < m_Width; ++x)
 					{
 						if (x < mouseX + halfRadius && x > mouseX - halfRadius
 							&& y < mouseY + halfRadius && y > mouseY - halfRadius)
 						{
-							u32 position = PositionToIndex(x, y);
+							size_t position = PositionToIndex(x, y);
 							if (InBounds(x, y))
 							{
 								if(m_Particles[position].id == PARTICLE_AIR) m_Particles[position] = m_CurrentParticle;
@@ -125,14 +125,14 @@ namespace Fidelia
 
 			if (InBounds(mouseX, mouseY))
 			{
-				for (size_t y = 0; y < m_Height; ++y)
+				for (u32 y = 0; y < m_Height; ++y)
 				{
-					for (size_t x = 0; x < m_Width; ++x)
+					for (u32 x = 0; x < m_Width; ++x)
 					{
 						if (x < mouseX + halfRadius && x > mouseX - halfRadius
 							&& y < mouseY + halfRadius && y > mouseY - halfRadius)
 						{
-							u32 position = PositionToIndex(x, y);
+							size_t position = PositionToIndex(x, y);
 							if (InBounds(x, y))
 							{
 								m_Particles[position] = m_ParticleList.air;
@@ -147,9 +147,9 @@ namespace Fidelia
 
 	void Simulation::Simulate()
 	{
-		for (size_t y = 0; y < m_Height; ++y)
+		for (u32 y = 0; y < m_Height; ++y)
 		{
-			for (size_t x = 0; x < m_Width; ++x)
+			for (u32 x = 0; x < m_Width; ++x)
 			{
 				auto position = PositionToIndex(x, y);
 
@@ -269,9 +269,9 @@ namespace Fidelia
 
 		size_t colorBitIt = 0;
 
-		for (size_t y = 0; y < m_Height; ++y)
+		for (u32 y = 0; y < m_Height; ++y)
 		{
-			for (size_t x = 0; x < m_Width; ++x)
+			for (u32 x = 0; x < m_Width; ++x)
 			{
 				u32 pixelPosition = y * m_Height + x;
 
@@ -295,7 +295,7 @@ namespace Fidelia
 		m_Particles[PositionToIndex(position)].dirty = true;
 		for (const auto& it : m_NeighborPositions)
 		{
-			u32 index = PositionToIndex(position + it);
+			size_t index = PositionToIndex(position + it);
 			if (InBounds(position + it))
 			{
 				m_Particles[index].dirty = true;
@@ -307,11 +307,13 @@ namespace Fidelia
 	{
 		if (!InBounds(to))
 		{
-			if (to.x < 0) to.x = 0;
-			else if (to.x > m_Width) to.x = m_Width;
+			if (to.x == INVALID_POS) to.x = 0;
+			else if (to.x < 0) to.x = 0;
+			else if (to.x >= m_Width) to.x = float(m_Width - 1);
 
-			if (to.y < 0) to.y = 0;
-			else if (to.y > m_Height) to.y = m_Height;
+			if (to.y == INVALID_POS) to.y = 0;
+			else if (to.y <= 0) to.y = 0;
+			else if (to.y >= m_Height) to.y = float(m_Height - 1);
 		}
 
 		auto id = m_Particles[PositionToIndex(to)].id;
@@ -341,11 +343,13 @@ namespace Fidelia
 	{
 		if (!InBounds(to))
 		{
-			if (to.x < 0) to.x = 0;
-			else if (to.x > m_Width) to.x = m_Width;
+			if (to.x == INVALID_POS) to.x = 0;
+			else if (to.x < 0) to.x = 0;
+			else if (to.x >= m_Width) to.x = float(m_Width - 1);
 
-			if (to.y < 0) to.y = 0;
-			else if (to.y > m_Height) to.y = m_Height;
+			if (to.y == INVALID_POS) to.y = 0;
+			else if (to.y <= 0) to.y = 0;
+			else if (to.y >= m_Height) to.y = float(m_Height - 1);
 		}
 
 		auto id = m_Particles[PositionToIndex(to)].id;
@@ -397,11 +401,13 @@ namespace Fidelia
 	{
 		if (!InBounds(to))
 		{
-			if (to.x < 0) to.x = 0;
-			else if (to.x > m_Width) to.x = m_Width;
+			if (to.x == INVALID_POS) to.x = 0;
+			else if (to.x < 0) to.x = 0;
+			else if (to.x >= m_Width) to.x = float(m_Width - 1);
 
-			if (to.y < 0) to.y = 0;
-			else if (to.y > m_Height) to.y = m_Height;
+			if (to.y == INVALID_POS) to.y = 0;
+			else if (to.y <= 0) to.y = 0;
+			else if (to.y >= m_Height) to.y = float(m_Height - 1);
 		}
 
 		auto id = m_Particles[PositionToIndex(to)].id;
@@ -426,11 +432,13 @@ namespace Fidelia
 	{
 		if (!InBounds(to))
 		{
-			if (to.x < 0) to.x = 0;
-			else if (to.x > m_Width) to.x = m_Width;
+			if (to.x == INVALID_POS) to.x = 0;
+			else if (to.x < 0) to.x = 0;
+			else if (to.x >= m_Width) to.x = float(m_Width - 1);
 
-			if (to.y < 0) to.y = 0;
-			else if (to.y >= m_Height) to.y = m_Height - 1;
+			if (to.y == INVALID_POS) to.y = 0;
+			else if (to.y <= 0) to.y = 0;
+			else if (to.y >= m_Height) to.y = float(m_Height - 1);
 		}
 
 		auto id = m_Particles[PositionToIndex(to)].id;
@@ -460,11 +468,13 @@ namespace Fidelia
 	{
 		if (!InBounds(to))
 		{
-			if (to.x < 0) to.x = 0;
-			else if (to.x > m_Width) to.x = m_Width;
+			if (to.x == INVALID_POS) to.x = 0;
+			else if (to.x < 0) to.x = 0;
+			else if (to.x >= m_Width) to.x = float(m_Width - 1);
 
-			if (to.y < 0) to.y = 0;
-			else if (to.y >= m_Height) to.y = m_Height - 1;
+			if (to.y == INVALID_POS) to.y = 0;
+			else if (to.y <= 0) to.y = 0;
+			else if (to.y >= m_Height) to.y = float(m_Height - 1);
 		}
 
 		auto id = m_Particles[PositionToIndex(to)].id;
@@ -507,11 +517,13 @@ namespace Fidelia
 	{
 		if (!InBounds(to))
 		{
-			if (to.x < 0) to.x = 0;
-			else if (to.x > m_Width) to.x = m_Width;
+			if (to.x == INVALID_POS) to.x = 0;
+			else if (to.x < 0) to.x = 0;
+			else if (to.x >= m_Width) to.x = float(m_Width - 1);
 
-			if (to.y < 0) to.y = 0;
-			else if (to.y >= m_Height) to.y = m_Height - 1;
+			if (to.y == INVALID_POS) to.y = 0;
+			else if (to.y <= 0) to.y = 0;
+			else if (to.y >= m_Height) to.y = float(m_Height - 1);
 		}
 
 		auto id = m_Particles[PositionToIndex(to)].id;

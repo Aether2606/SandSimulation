@@ -15,9 +15,9 @@ namespace Fidelia
 		static constexpr u32 maxTextureSlots = 32;
 
 
-		BufferId quadVAO;
-		BufferId quadVBO;
-		BufferId quadIBO;
+		BufferId quadVAO = 0;
+		BufferId quadVBO = 0;
+		BufferId quadIBO = 0;
 
 
 		Shader shader;
