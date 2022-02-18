@@ -1,5 +1,7 @@
 # SandSimulation 
 
+![sandbox_screenshot](screenshots/sandbox.png)
+
 #### Building
 There are a few libraries which are required to build this project. (I've included them on the vendor folder for convenience)
  - GLFW
@@ -17,5 +19,3 @@ There are a few libraries which are required to build this project. (I've includ
  - 5: Material Smoke
  - 6: Material Oil
  - 7: Material Acid
-
-![sandbox_screenshot](screenshots/sandbox.jpg)
