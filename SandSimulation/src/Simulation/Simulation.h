@@ -12,7 +12,7 @@
 #define PARTICLE_ACID 7
 
 #define FIRE_LIFETIME 1000
-#define SMOKE_LIFETIME 200
+#define SMOKE_LIFETIME 50
 
 #define INVALID_POS UINT_MAX
 
@@ -81,6 +81,8 @@ namespace Fidelia
 		void NotifyNeighbors(const vec2 position);
 		void SaveTexture();
 
+		void ClearScreen();
+
 		bool UpdateSand(const vec2 from, vec2 to, const Particle particle);
 		bool UpdateWater(const vec2 from, vec2 to, const Particle particle);
 		bool UpdateFire(const vec2 from, vec2 to, const Particle particle);
@@ -89,7 +91,7 @@ namespace Fidelia
 		bool UpdateAcid(const vec2 from, vec2 to, const Particle particle);
 	private:
 		const u32 m_BrushSize = 20;
-		const u32 m_Gravity = 5;
+		const u32 m_Gravity = 10;
 		const s32 m_FireSpreadChance = 10;
 		const s32 m_AcidCorrodeChance = 1;
 

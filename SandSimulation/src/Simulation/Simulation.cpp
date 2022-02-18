@@ -20,14 +20,7 @@ namespace Fidelia
 
 		m_Particles = new Particle[m_MaxParticleCount];
 
-		for (u32 y = 0; y < m_Height; ++y)
-		{
-			for (u32 x = 0; x < m_Width; ++x)
-			{
-				auto pos = PositionToIndex(x, y);
-				m_Particles[pos] = m_ParticleList.air;
-			}
-		}
+		ClearScreen();
 
 		m_NeighborPositions[0] = vec2( 0,-1);
 		m_NeighborPositions[1] = vec2( 0, 1);
@@ -86,14 +79,7 @@ namespace Fidelia
 		}
 		else if (Keyboard::IsKeyPressed(Key::C))
 		{
-			for (u32 y = 0; y < m_Height; ++y)
-			{
-				for (u32 x = 0; x < m_Width; ++x)
-				{
-					auto pos = PositionToIndex(x, y);
-					m_Particles[pos] = m_ParticleList.air;
-				}
-			}
+			ClearScreen();
 		}
 
 		if (Mouse::GetLeftButton())
@@ -163,6 +149,7 @@ namespace Fidelia
 				{
 					particle = m_ParticleList.air;
 					m_ToNotify.push_back(vec2(x, y));
+					continue;
 				}
 
 				if (particle.id == PARTICLE_SAND)
@@ -181,10 +168,10 @@ namespace Fidelia
 				{
 					std::array<vec2, 5> desiredPositions;
 					desiredPositions[0] = vec2(x, y - m_Gravity);
-					desiredPositions[1] = vec2(x - 1, y - m_Gravity);
-					desiredPositions[2] = vec2(x + 1, y - m_Gravity);
-					desiredPositions[3] = vec2(x - m_Gravity, y);
-					desiredPositions[4] = vec2(x + m_Gravity, y);
+					desiredPositions[1] = vec2(x + m_Gravity, y - m_Gravity);
+					desiredPositions[2] = vec2(x - m_Gravity, y - m_Gravity);
+					desiredPositions[3] = vec2(x + m_Gravity, y);
+					desiredPositions[4] = vec2(x - m_Gravity, y);
 
 					for (const auto& it : desiredPositions)
 					{
@@ -229,8 +216,8 @@ namespace Fidelia
 				{
 					std::array<vec2, 5> desiredPositions;
 					desiredPositions[0] = vec2(x, y - m_Gravity);
-					desiredPositions[1] = vec2(x - 1, y - m_Gravity);
-					desiredPositions[2] = vec2(x + 1, y - m_Gravity);
+					desiredPositions[1] = vec2(x - m_Gravity, y - m_Gravity);
+					desiredPositions[2] = vec2(x + m_Gravity, y - m_Gravity);
 					desiredPositions[3] = vec2(x - m_Gravity, y);
 					desiredPositions[4] = vec2(x + m_Gravity, y);
 
@@ -243,10 +230,10 @@ namespace Fidelia
 				{
 					std::array<vec2, 5> desiredPositions;
 					desiredPositions[0] = vec2(x, y - m_Gravity);
-					desiredPositions[1] = vec2(x - 1, y - m_Gravity);
-					desiredPositions[2] = vec2(x + 1, y - m_Gravity);
-					desiredPositions[3] = vec2(x - m_Gravity, y);
-					desiredPositions[4] = vec2(x + m_Gravity, y);
+					desiredPositions[1] = vec2(x + m_Gravity, y - m_Gravity);
+					desiredPositions[2] = vec2(x - m_Gravity, y - m_Gravity);
+					desiredPositions[3] = vec2(x + m_Gravity, y);
+					desiredPositions[4] = vec2(x - m_Gravity, y);
 
 					for (const auto& it : desiredPositions)
 					{
@@ -299,6 +286,18 @@ namespace Fidelia
 			if (InBounds(position + it))
 			{
 				m_Particles[index].dirty = true;
+			}
+		}
+	}
+
+	void Simulation::ClearScreen()
+	{
+		for (u32 y = 0; y < m_Height; ++y)
+		{
+			for (u32 x = 0; x < m_Width; ++x)
+			{
+				auto pos = PositionToIndex(x, y);
+				m_Particles[pos] = m_ParticleList.air;
 			}
 		}
 	}
@@ -363,14 +362,14 @@ namespace Fidelia
 			}
 			else
 			{
-				if (to.x < from.x - 1)
-				{
-					to.x += 1;
-					return UpdateWater(from, to, particle);
-				}
-				else if (to.x > from.x + 1)
+				if (to.x > from.x + 1)
 				{
 					to.x -= 1;
+					return UpdateWater(from, to, particle);
+				}
+				else if (to.x < from.x - 1)
+				{
+					to.x += 1;
 					return UpdateWater(from, to, particle);
 				}
 			}
@@ -488,14 +487,14 @@ namespace Fidelia
 			}
 			else
 			{
-				if (to.x < from.x - 1)
-				{
-					to.x += 1;
-					return UpdateOil(from, to, particle);
-				}
-				else if (to.x > from.x + 1)
+				if (to.x > from.x + 1)
 				{
 					to.x -= 1;
+					return UpdateOil(from, to, particle);
+				}
+				else if (to.x < from.x - 1)
+				{
+					to.x += 1;
 					return UpdateOil(from, to, particle);
 				}
 			}
@@ -537,14 +536,14 @@ namespace Fidelia
 			}
 			else
 			{
-				if (to.x < from.x - 1)
-				{
-					to.x += 1;
-					return UpdateAcid(from, to, particle);
-				}
-				else if (to.x > from.x + 1)
+				if (to.x > from.x + 1)
 				{
 					to.x -= 1;
+					return UpdateAcid(from, to, particle);
+				}
+				else if (to.x < from.x - 1)
+				{
+					to.x += 1;
 					return UpdateAcid(from, to, particle);
 				}
 			}
